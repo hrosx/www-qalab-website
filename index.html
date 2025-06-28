@@ -1,0 +1,861 @@
+<!doctype html>
+<html class="h-100" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <meta name="description" content="A growing collection of ready to use components for the CSS framework Bootstrap 5">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="96x96" href=".t/img/favicon.png">
+  <meta name="author" content="Holger Koenemann">
+  <meta name="generator" content="Eleventy v2.0.0">
+  <meta name="HandheldFriendly" content="true">
+  <title>QaLab</title>
+  <link rel="stylesheet" href="css/theme.min.css">
+
+  <style>
+    /* inter-300 - latin */
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 300;
+      font-display: swap;
+      src: local(''),
+        url('./fonts/inter-v12-latin-300.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('./fonts/inter-v12-latin-300.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
+
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: local(''),
+        url('./fonts/inter-v12-latin-500.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('./fonts/inter-v12-latin-500.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
+
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: local(''),
+        url('./fonts/inter-v12-latin-700.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('./fonts/inter-v12-latin-700.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
+
+    /* Position iframe in the bottom-right corner */
+    .iframe {
+      position: fixed;
+      bottom: 0px;
+      right: 0px;
+      width: 231px;
+      height: 343px;
+      z-index: 1000;
+      border: none;
+    }
+    
+    /* Scroll indicator arrow */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 18px;
+      left: 40px;
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(145deg, #4a5568, #2d3748);
+      border-radius: 50%;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(45, 55, 72, 0.4);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 10px;
+    }
+    
+    .scroll-indicator:before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #4a5568, #2d3748);
+      z-index: -1;
+      opacity: 0.7;
+    }
+    
+    .scroll-indicator:hover {
+      transform: scale(1.1) translateY(-5px);
+      box-shadow: 0 10px 25px rgba(45, 55, 72, 0.5);
+    }
+    
+    .scroll-indicator.visible {
+      opacity: 1;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .scroll-indicator svg {
+      color: white;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+      animation: bounce 2s infinite;
+      width: 24px;
+      height: 24px;
+      margin-bottom: 2px;
+    }
+    
+    .scroll-indicator-text {
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(45, 55, 72, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(45, 55, 72, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(45, 55, 72, 0);
+      }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Language Toggle Styles */
+    .language-toggle {
+      background: none;
+      border: 2px solid #212529;
+      color: #212529;
+      padding: 4px 12px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      margin-left: 15px;
+    }
+
+    .language-toggle:hover {
+      background: #212529;
+      color: white;
+    }
+  </style>
+
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navScroll">
+
+  <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
+    <div class="container">
+      <a class="navbar-brand pe-4 fs-4" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-layers-half"
+          viewbox="0 0 16 16">
+          <path
+            d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882l-7.5-4zM8 9.433 1.562 6 8 2.567 14.438 6 8 9.433z" />
+        </svg>
+        <span class="ms-1 fw-bolder">QALAB</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#services" aria-label="Brings you to the frontpage">
+              <span data-translate="nav.services">Services</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#aboutus">
+              <span data-translate="nav.aboutus">About us</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#numbers">
+              <span data-translate="nav.numbers">Numbers</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#pricing">
+              <span data-translate="nav.pricing">Pricing</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="contactUsLink">
+              <span data-translate="nav.contactUs">Contact Us</span>
+            </a>
+          </li>
+        </ul>
+        <button class="language-toggle" id="languageToggle">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="w-100 overflow-hidden bg-gray-100" id="top">
+      <div class="container position-relative">
+        <div class="col-12 col-lg-8 mt-0 h-100 position-absolute top-0 end-0 bg-cover" data-aos="fade-left"
+          style="background-image: url(img/webp/interior11.webp);">
+        </div>
+        <div class="row">
+          <div class="col-lg-7 py-vh-6 position-relative" data-aos="fade-right">
+            <h1 class="display-1 fw-bold mt-5" data-translate="hero.title">Transform Your Lead Generation Strategy with Web-AI</h1>
+            <p class="lead" data-translate="hero.subtitle">Our AI-powered platform helps you capture, qualify, and convert more leads through intelligent conversations from those who visit your home web page. Let us show you how to engage with visitors 24/7 and never miss a potential customer.</p>
+            <a href="#numbers" class="btn btn-dark btn-xl shadow me-3 rounded-0 my-5" data-translate="hero.cta">Start Generating Leads</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-vh-5 w-100 overflow-hidden" id="services">
+      <div class="container">
+        <div class="row d-flex justify-content-end">
+          <div class="col-lg-8" data-aos="fade-down">
+            <h2 class="display-6" data-translate="services.title">Three powerful ways to boost your lead generation</h2>
+          </div>
+        </div>
+        <div class="row d-flex align-items-center">
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <span class="h5 fw-lighter">01.</span>
+            <h3 class="py-5 border-top border-dark" data-translate="services.01.title">24/7 Lead Capture</h3>
+            <p data-translate="services.01.desc">Never miss a potential lead with our AI assistant that engages visitors around the clock. Our intelligent system captures contact information and qualifies leads even when your team is offline.</p>
+            <a href="#" class="link-fancy">Learn more</a>
+          </div>
+
+          <div class="col-md-6 col-lg-4 py-vh-4 pb-0" data-aos="fade-up" data-aos-delay="400">
+            <span class="h5 fw-lighter">02.</span>
+            <h3 class="py-5 border-top border-dark" data-translate="services.02.title">Smart Lead Qualification</h3>
+            <p data-translate="services.02.desc">Automatically qualify leads through intelligent conversations. Our AI understands customer intent and gathers key information to help your sales team focus on the most promising opportunities.</p>
+            <a href="#" class="link-fancy">Learn more</a>
+          </div>
+
+          <div class="col-md-6 col-lg-4 py-vh-6 pb-0" data-aos="fade-up" data-aos-delay="600">
+            <span class="h5 fw-lighter">03.</span>
+            <h3 class="py-5 border-top border-dark" data-translate="services.03.title">Seamless Integration</h3>
+            <p data-translate="services.03.desc">Easily connect APIs using documented iFrame links. Integrate your existing CRM and marketing tools to automatically sync leads, track conversations, and measure ROI with our powerful analytics dashboard.</p>
+            <a href="#" class="link-fancy">Learn more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-vh-4 bg-gray-100 w-100 overflow-hidden" id="aboutus">
+      <div class="container">
+        <div class="row d-flex justify-content-between align-items-center">
+          <div class="col-lg-6">
+            <div class="row gx-5 d-flex">
+              <div class="col-md-11">
+                <div class="shadow ratio ratio-16x9 rounded bg-cover bp-center align-self-end" data-aos="fade-right"
+                  style="background-image: url(img/webp/people15.webp);--bs-aspect-ratio: 50%;">
+                </div>
+              </div>
+              <div class="col-md-5 offset-md-1">
+                <div class="shadow ratio ratio-1x1 rounded bg-cover mt-5 bp-center float-end" data-aos="fade-up"
+                  style="background-image: url(img/webp/interior42.webp);">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-12 shadow ratio rounded bg-cover mt-5 bp-center" data-aos="fade-left"
+                  style="background-image: url(img/webp/people4.webp);--bs-aspect-ratio: 150%;">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <h3 class="py-5 border-top border-dark" data-aos="fade-left" data-translate="aboutus.title">We've helped businesses transform their lead generation process</h3>
+            <p data-aos="fade-left" data-aos-delay="200" data-translate="aboutus.desc">Our AI-powered platform has helped companies across industries capture more leads, qualify them effectively, and convert them into customers. Join the growing list of businesses that are leveraging AI to supercharge their lead generation efforts.</p>
+            <p>
+              <a href="#" class="link-fancy link-dark" data-aos="fade-left" data-aos-delay="400">Learn more
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-vh-5 w-100 overflow-hidden" id="numbers">
+      <div class="container">
+        <div class="row d-flex justify-content-between align-items-center">
+          <div class="col-lg-5">
+            <h3 class="py-5 border-top border-dark" data-aos="fade-right" data-translate="numbers.title">First Impressions Matter - It takes just 0.5 seconds for visitors to form an opinion about your website. If your site isn't engaging or easy to navigate, they'll leave instantly.</h3>
+          </div>
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-12">
+                <h2 class="display-6 mb-5" data-aos="fade-down" data-translate="numbers.subtitle">Surprising Facts About Consumers Visiting Business Websites.</h2>
+              </div>
+              <div class="col-lg-6" data-aos="fade-up">
+                <div class="display-6 fw-bold py-4" data-translate="numbers.01.title">40% - 60%</div>
+                <p data-translate="numbers.01.subtitle">Bounce Rate – Lost Interest, Lost Revenue</p>
+                <p class="text-black-100" data-translate="numbers.01.desc">Prospects visit your homepage, glance around, and leave without interacting. Whether they're overwhelmed by too much information, unsure where to click next, or simply not engaged, a high bounce rate means lost opportunities.</p>
+              </div>
+              <div class="col-lg-6" data-aos="fade-up">
+                <div class="display-6 fw-bold py-4" data-translate="numbers.02.title">20% - 30%</div>
+                <p data-translate="numbers.02.subtitle">Lost Business – Forms Are a Barrier</p>
+                <p class="text-black-100" data-translate="numbers.02.desc">Lengthy forms frustrate users, especially when they're on the go. Many prospects abandon the process because they don't have the time or patience to fill out multiple fields—especially on mobile devices.</p>
+              </div>
+              <div class="col-lg-6" data-aos="fade-up">
+                <div class="display-6 fw-bold py-4" data-translate="numbers.03.title">10% - 20%</div>
+                <p data-translate="numbers.03.subtitle">Lost Prospects – Privacy Concerns Block Engagement</p>
+                <p class="text-black-100" data-translate="numbers.03.desc">Many potential customers hesitate to share personal information before they fully trust a brand. Traditional lead forms create a roadblock, pushing them away.</p>
+              </div>
+              <div class="col-lg-6" data-aos="fade-up">
+                <div class="display-6 fw-bold py-4" data-translate="numbers.04.title">20% - 30%</div>
+                <p data-translate="numbers.04.subtitle">Missed Opportunities – Slow Response Equals Lost Sales</p>
+                <p class="text-black-100" data-translate="numbers.04.desc">Speed matters. If a prospect submits a form and has to wait hours—or even days—for a response, they'll likely move on. By the time your team follows up, they've already contacted a competitor.</p>
+              </div>
+              <div class="col-lg-6" data-aos="fade-up">
+                <div class="display-6 fw-bold py-4" data-translate="numbers.05.title">80%</div>
+                <p data-translate="numbers.05.subtitle">Of Consumers Want Instant Action – The "Now Factor"</p>
+                <p class="text-black-100" data-translate="numbers.05.desc">In today's digital landscape, customers expect immediate answers. They don't want to wait for a call or email. If they're interested, they want to engage right now—whether it's for product details, pricing, or booking an appointment.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container py-vh-4 w-100 overflow-hidden" id="pricing">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-lg-5">
+          <h3 class="py-5 border-top border-dark" data-aos="fade-right" data-translate="pricing.title">Pricing</h3>
+        </div>
+        <div class="col-md-7" data-aos="fade-left">
+          <blockquote>
+            <div class="fs-4 my-3 fw-light pt-4 pb-3" data-translate="pricing.desc">
+              Getting started is completely free—no installation or setup fees. You only pay for qualified engagement, with a cost per click ranging from $2 to $4. We offer a flexible, no-contract model. Cancel anytime—no commitments, just results!
+            </div>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-vh-6 bg-gray-900 text-light w-100 overflow-hidden" id="workwithus">
+      <div class="container">
+        <div class="row d-flex justify-content-center">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8 text-center" data-aos="fade">
+              <p class="text-secondary lead" data-translate="cta.title">The Bottom Line? AI Converts More Leads into Customers</p>
+              <h2 class="display-6 mb-5" data-translate="cta.subtitle">Don't let your website be a dead-end. An AI conversational agent turns visitors into engaged prospects, reducing bounce rates, removing friction, and increasing conversions. Ready to see how AI can boost your sales? Let's talk!</h2>
+            </div>
+            <div class="col-12">
+              <a href="#" id="talkToAbbyBtn" class="btn btn-warning btn-xl shadow me-3 mt-4" data-aos="fade-down" onclick="expandAbbyAgent(); return false;" data-translate="cta.button">Talk to Abby</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+    });
+  </script>
+  <script>
+    let scrollpos = window.scrollY
+    const header = document.querySelector(".navbar")
+    const header_height = header.offsetHeight
+
+    const add_class_on_scroll = () => header.classList.add("scrolled", "shadow-sm")
+    const remove_class_on_scroll = () => header.classList.remove("scrolled", "shadow-sm")
+
+    window.addEventListener('scroll', function () {
+      scrollpos = window.scrollY;
+
+      if (scrollpos >= header_height) { add_class_on_scroll() }
+      else { remove_class_on_scroll() }
+    })
+  </script>
+  
+  <!-- Abby Agent Control -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM fully loaded, setting up Abby agent expansion');
+      
+      const agentIframe = document.querySelector('iframe[src*="/agent"]');
+      if (agentIframe) {
+        console.log('Agent iframe found:', agentIframe.src);
+      } else {
+        console.warn('Agent iframe not found on page!');
+      }
+    });
+    
+    function expandAbbyAgent() {
+      console.log('expandAbbyAgent function called');
+      
+      localStorage.setItem('abby_agent_expanded', 'true');
+      console.log('localStorage item set:', localStorage.getItem('abby_agent_expanded'));
+      
+      const agentIframe = document.querySelector('iframe[src*="/agent"]');
+      
+      if (agentIframe) {
+        console.log('Agent iframe found, sending direct message');
+        try {
+          agentIframe.contentWindow.postMessage({ action: 'expandAbbyAgent' }, '*');
+          console.log('Message sent directly to agent iframe');
+        } catch (e) {
+          console.error('Error posting to agent iframe:', e);
+        }
+      } else {
+        console.warn('No agent iframe found, falling back to broadcast methods');
+      }
+      
+      try {
+        window.postMessage({ action: 'expandAbbyAgent' }, '*');
+        console.log('Posted message to window');
+      } catch (e) {
+        console.error('Posting message to window failed:', e);
+      }
+      
+      try {
+        const iframes = document.querySelectorAll('iframe');
+        console.log('Found', iframes.length, 'total iframes');
+        
+        iframes.forEach((iframe, index) => {
+          if (iframe !== agentIframe) {
+            try {
+              console.log('Sending message to iframe', index);
+              iframe.contentWindow.postMessage({ action: 'expandAbbyAgent' }, '*');
+            } catch (e) {
+              console.error('Error posting to iframe', index, e);
+            }
+          }
+        });
+      } catch (e) {
+        console.error('Error accessing iframes:', e);
+      }
+      
+      const btn = document.getElementById('talkToAbbyBtn');
+      if (btn) {
+        btn.classList.add('btn-success');
+        setTimeout(() => {
+          btn.classList.remove('btn-success');
+        }, 500);
+      }
+      
+      console.log('Abby agent expansion triggered - process complete');
+      
+      return false;
+    }
+  </script>
+
+  <!-- Language Toggle Script -->
+  <script>
+    // Define translations object
+    const translations = {
+      en: {
+        // Navigation
+        'nav.services': 'Services',
+        'nav.aboutus': 'About us',
+        'nav.numbers': 'Numbers',
+        'nav.pricing': 'Pricing',
+        'nav.contactUs': 'Contact Us',
+
+        // Hero Section
+        'hero.title': 'Transform Your Lead Generation Strategy with Web-AI',
+        'hero.subtitle': 'Our AI-powered platform helps you capture, qualify, and convert more leads through intelligent conversations from those who visit your home web page. Let us show you how to engage with visitors 24/7 and never miss a potential customer.',
+        'hero.cta': 'Start Generating Leads',
+
+        // Services Section
+        'services.title': 'Three powerful ways to boost your lead generation',
+        'services.01.title': '24/7 Lead Capture',
+        'services.01.desc': 'Never miss a potential lead with our AI assistant that engages visitors around the clock. Our intelligent system captures contact information and qualifies leads even when your team is offline.',
+        'services.02.title': 'Smart Lead Qualification',
+        'services.02.desc': 'Automatically qualify leads through intelligent conversations. Our AI understands customer intent and gathers key information to help your sales team focus on the most promising opportunities.',
+        'services.03.title': 'Seamless Integration',
+        'services.03.desc': 'Easily connect APIs using documented iFrame links. Integrate your existing CRM and marketing tools to automatically sync leads, track conversations, and measure ROI with our powerful analytics dashboard.',
+
+        // About Us Section
+        'aboutus.title': 'We\'ve helped businesses transform their lead generation process',
+        'aboutus.desc': 'Our AI-powered platform has helped companies across industries capture more leads, qualify them effectively, and convert them into customers. Join the growing list of businesses that are leveraging AI to supercharge their lead generation efforts.',
+
+        // Numbers Section
+        'numbers.title': 'First Impressions Matter - It takes just 0.5 seconds for visitors to form an opinion about your website. If your site isn\'t engaging or easy to navigate, they\'ll leave instantly.',
+        'numbers.subtitle': 'Surprising Facts About Consumers Visiting Business Websites.',
+        'numbers.01.title': '40% - 60%',
+        'numbers.01.subtitle': 'Bounce Rate – Lost Interest, Lost Revenue',
+        'numbers.01.desc': 'Prospects visit your homepage, glance around, and leave without interacting. Whether they\'re overwhelmed by too much information, unsure where to click next, or simply not engaged, a high bounce rate means lost opportunities.',
+        'numbers.02.title': '20% - 30%',
+        'numbers.02.subtitle': 'Lost Business – Forms Are a Barrier',
+        'numbers.02.desc': 'Lengthy forms frustrate users, especially when they\'re on the go. Many prospects abandon the process because they don\'t have the time or patience to fill out multiple fields—especially on mobile devices.',
+        'numbers.03.title': '10% - 20%',
+        'numbers.03.subtitle': 'Lost Prospects – Privacy Concerns Block Engagement',
+        'numbers.03.desc': 'Many potential customers hesitate to share personal information before they fully trust a brand. Traditional lead forms create a roadblock, pushing them away.',
+        'numbers.04.title': '20% - 30%',
+        'numbers.04.subtitle': 'Missed Opportunities – Slow Response Equals Lost Sales',
+        'numbers.04.desc': 'Speed matters. If a prospect submits a form and has to wait hours—or even days—for a response, they\'ll likely move on. By the time your team follows up, they\'ve already contacted a competitor.',
+        'numbers.05.title': '80%',
+        'numbers.05.subtitle': 'Of Consumers Want Instant Action – The "Now Factor"',
+        'numbers.05.desc': 'In today\'s digital landscape, customers expect immediate answers. They don\'t want to wait for a call or email. If they\'re interested, they want to engage right now—whether it\'s for product details, pricing, or booking an appointment.',
+
+        // Pricing Section
+        'pricing.title': 'Pricing',
+        'pricing.desc': 'Getting started is completely free—no installation or setup fees. You only pay for qualified engagement, with a cost per click ranging from $2 to $4. We offer a flexible, no-contract model. Cancel anytime—no commitments, just results!',
+
+        // CTA Section
+        'cta.title': 'The Bottom Line? AI Converts More Leads into Customers',
+        'cta.subtitle': 'Don\'t let your website be a dead-end. An AI conversational agent turns visitors into engaged prospects, reducing bounce rates, removing friction, and increasing conversions. Ready to see how AI can boost your sales? Let\'s talk!',
+        'cta.button': 'Talk to Abby',
+
+        // Contact Section
+        'contact.title': 'Contact Our Sales Team',
+        'contact.email.label': 'Email us',
+        'contact.email.value': 'sales@qalab.ai'
+      },
+      es: {
+        // Navigation
+        'nav.services': 'Servicios',
+        'nav.aboutus': 'Sobre Nosotros',
+        'nav.numbers': 'Números',
+        'nav.pricing': 'Precios',
+        'nav.contactUs': 'Contáctanos',
+
+        // Hero Section
+        'hero.title': 'Transforma tu Estrategia de Generación de Leads con Web-AI',
+        'hero.subtitle': 'Nuestra plataforma impulsada por IA te ayuda a capturar, calificar y convertir más leads a través de conversaciones inteligentes con los visitantes de tu página web. Te mostramos cómo interactuar con visitantes 24/7 y nunca perder un cliente potencial.',
+        'hero.cta': 'Empieza a Generar Leads',
+
+        // Services Section
+        'services.title': 'Tres formas poderosas de impulsar tu generación de leads',
+        'services.01.title': 'Captura de Leads 24/7',
+        'services.01.desc': 'Nunca pierdas un lead potencial con nuestro asistente de IA que interactúa con los visitantes las 24 horas. Nuestro sistema inteligente captura información de contacto y califica leads incluso cuando tu equipo está fuera de línea.',
+        'services.02.title': 'Calificación Inteligente de Leads',
+        'services.02.desc': 'Califica automáticamente los leads a través de conversaciones inteligentes. Nuestra IA entiende la intención del cliente y recopila información clave para ayudar a tu equipo de ventas a enfocarse en las oportunidades más prometedoras.',
+        'services.03.title': 'Integración Perfecta',
+        'services.03.desc': 'Conecta fácilmente APIs usando enlaces iFrame documentados. Integra tus herramientas existentes de CRM y marketing para sincronizar automáticamente leads, rastrear conversaciones y medir ROI con nuestro potente panel de análisis.',
+
+        // About Us Section
+        'aboutus.title': 'Hemos ayudado a empresas a transformar su proceso de generación de leads',
+        'aboutus.desc': 'Nuestra plataforma impulsada por IA ha ayudado a empresas de diferentes industrias a capturar más leads, calificarlos efectivamente y convertirlos en clientes. Únete a la creciente lista de empresas que están aprovechando la IA para potenciar sus esfuerzos de generación de leads.',
+
+        // Numbers Section
+        'numbers.title': 'Las Primeras Impresiones Importan - Solo toma 0.5 segundos para que los visitantes formen una opinión sobre tu sitio web. Si tu sitio no es atractivo o fácil de navegar, se irán instantáneamente.',
+        'numbers.subtitle': 'Datos Sorprendentes Sobre Consumidores que Visitan Sitios Web de Negocios.',
+        'numbers.01.title': '40% - 60%',
+        'numbers.01.subtitle': 'Tasa de Rebote – Interés Perdido, Ingresos Perdidos',
+        'numbers.01.desc': 'Los prospectos visitan tu página principal, miran alrededor y se van sin interactuar. Ya sea que estén abrumados por demasiada información, no sepan dónde hacer clic o simplemente no estén comprometidos, una alta tasa de rebote significa oportunidades perdidas.',
+        'numbers.02.title': '20% - 30%',
+        'numbers.02.subtitle': 'Negocios Perdidos – Los Formularios Son una Barrera',
+        'numbers.02.desc': 'Los formularios largos frustran a los usuarios, especialmente cuando están en movimiento. Muchos prospectos abandonan el proceso porque no tienen tiempo o paciencia para llenar múltiples campos, especialmente en dispositivos móviles.',
+        'numbers.03.title': '10% - 20%',
+        'numbers.03.subtitle': 'Prospectos Perdidos – Preocupaciones de Privacidad Bloquean el Compromiso',
+        'numbers.03.desc': 'Muchos clientes potenciales dudan en compartir información personal antes de confiar completamente en una marca. Los formularios tradicionales de leads crean un obstáculo, alejándolos.',
+        'numbers.04.title': '20% - 30%',
+        'numbers.04.subtitle': 'Oportunidades Perdidas – Respuesta Lenta Igual a Ventas Perdidas',
+        'numbers.04.desc': 'La velocidad importa. Si un prospecto envía un formulario y tiene que esperar horas, o incluso días, para una respuesta, probablemente se irá. Para cuando tu equipo haga seguimiento, ya habrán contactado a un competidor.',
+        'numbers.05.title': '80%',
+        'numbers.05.subtitle': 'De los Consumidores Quieren Acción Instantánea – El Factor "Ahora"',
+        'numbers.05.desc': 'En el panorama digital actual, los clientes esperan respuestas inmediatas. No quieren esperar una llamada o correo electrónico. Si están interesados, quieren participar ahora mismo, ya sea para detalles del producto, precios o reservar una cita.',
+
+        // Pricing Section
+        'pricing.title': 'Precios',
+        'pricing.desc': 'Comenzar es completamente gratis, sin costos de instalación o configuración. Solo pagas por el compromiso calificado, con un costo por clic que va desde $2 a $4. Ofrecemos un modelo flexible sin contrato. Cancela en cualquier momento, sin compromisos, ¡solo resultados!',
+
+        // CTA Section
+        'cta.title': 'La Línea de Fondo? La IA Convierte Más Leads en Clientes',
+        'cta.subtitle': 'No dejes que tu sitio web sea un callejón sin salida. Un agente conversacional de IA convierte visitantes en prospectos comprometidos, reduciendo tasas de rebote, eliminando fricción y aumentando conversiones. ¿Listo para ver cómo la IA puede impulsar tus ventas? ¡Hablemos!',
+        'cta.button': 'Habla con Abby',
+
+        // Contact Section
+        'contact.title': 'Contacta a Nuestro Equipo de Ventas',
+        'contact.email.label': 'Envíanos un correo',
+        'contact.email.value': 'sales@qalab.ai'
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const languageToggle = document.getElementById('languageToggle');
+      let currentLang = localStorage.getItem('preferredLanguage') || 'en';
+
+      // Initialize translations
+      function updateTranslations() {
+        const elements = document.querySelectorAll('[data-translate]');
+        elements.forEach(element => {
+          const key = element.getAttribute('data-translate');
+          element.textContent = translations[currentLang][key] || key;
+        });
+        
+        // Update language toggle text
+        languageToggle.textContent = currentLang === 'en' ? 'ES' : 'EN';
+        
+        // Update HTML lang attribute
+        document.documentElement.lang = currentLang;
+      }
+
+      // Toggle language
+      languageToggle.addEventListener('click', function() {
+        currentLang = currentLang === 'en' ? 'es' : 'en';
+        localStorage.setItem('preferredLanguage', currentLang);
+        updateTranslations();
+      });
+
+      // Initial translation
+      updateTranslations();
+    });
+  </script>
+
+  <!-- IFRAME AT THE BOTTOM-RIGHT OF THE SCREEN -->
+  <iframe class="iframe" src="/agent" title="Agent Card Widget"></iframe>
+
+  <!-- Scroll indicator arrow -->
+  <div class="scroll-indicator" id="scrollIndicator">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down"
+      viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+      <path fill-rule="evenodd"
+        d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+    </svg>
+  </div>
+  
+  <script>
+    // Scroll indicator functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      const scrollIndicator = document.getElementById('scrollIndicator');
+
+      setTimeout(() => {
+        scrollIndicator.classList.add('visible');
+        scrollIndicator.style.animation = "float 3s ease-in-out infinite, pulse 2s infinite";
+      }, 1500);
+
+      window.addEventListener('scroll', function () {
+        const scrollPosition = window.scrollY;
+        const windowHeight = window.innerHeight;
+
+        if (scrollPosition > windowHeight * 0.3) {
+          scrollIndicator.classList.remove('visible');
+        } else if (scrollPosition < 50 && !scrollIndicator.classList.contains('visible')) {
+          scrollIndicator.classList.add('visible');
+        }
+      });
+
+      scrollIndicator.addEventListener('click', function () {
+        scrollIndicator.classList.remove('visible');
+        window.scrollTo({
+          top: window.innerHeight,
+          behavior: 'smooth'
+        });
+      });
+
+      // Contact Us notification functionality
+      const contactUsLink = document.getElementById('contactUsLink');
+      if (contactUsLink) {
+        contactUsLink.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          const notification = document.createElement('div');
+          notification.className = 'contact-notification';
+          notification.innerHTML = `
+                <div class="notification-content">
+                  <div class="notification-header">
+                    <span data-translate="contact.title">Contact Our Sales Team</span>
+                    <button class="close-btn">&times;</button>
+                  </div>
+                  <div class="notification-body">
+                    <div class="contact-options">
+                      <div class="contact-option">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                          <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
+                        </svg>
+                        <div>
+                          <p class="label" data-translate="contact.email.label">Email us</p>
+                          <a href="mailto:sales@qalab.ai" class="value" data-translate="contact.email.value">sales@qalab.ai</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+          document.body.appendChild(notification);
+
+          const style = document.createElement('style');
+          style.textContent = `
+                .contact-notification {
+                  position: fixed;
+                  top: 20px;
+                  right: 20px;
+                  max-width: 350px;
+                  background: white;
+                  border-radius: 0;
+                  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+                  z-index: 2000;
+                  overflow: hidden;
+                  animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                  border-top: 3px solid #212529;
+                  font-family: 'Inter', sans-serif;
+                }
+                
+                @keyframes slideIn {
+                  0% { transform: translateX(calc(100% + 20px)); opacity: 0; }
+                  100% { transform: translateX(0); opacity: 1; }
+                }
+                
+                @keyframes slideOut {
+                  0% { transform: translateX(0); opacity: 1; }
+                  100% { transform: translateX(calc(100% + 20px)); opacity: 0; }
+                }
+                
+                @keyframes pulse {
+                  0% { box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+                  50% { box-shadow: 0 15px 35px rgba(33, 37, 41, 0.3); }
+                  100% { box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+                }
+                
+                .notification-content {
+                  padding: 0;
+                }
+                
+                .notification-header {
+                  display: flex;
+                  align-items: center;
+                  padding: 18px 20px;
+                  background: #f8f9fa;
+                  border-bottom: 1px solid #dee2e6;
+                }
+                
+                .notification-header svg {
+                  margin-right: 12px;
+                  color: #212529;
+                }
+                
+                .notification-header span {
+                  flex-grow: 1;
+                  font-weight: 500;
+                  font-size: 16px;
+                  color: #212529;
+                }
+                
+                .close-btn {
+                  background: none;
+                  border: none;
+                  font-size: 24px;
+                  cursor: pointer;
+                  color: #6c757d;
+                  padding: 0 5px;
+                  transition: color 0.2s;
+                }
+                
+                .close-btn:hover {
+                  color: #212529;
+                }
+                
+                .notification-body {
+                  padding: 20px;
+                }
+                
+                .contact-options {
+                  margin-bottom: 0;
+                }
+                
+                .contact-option {
+                  display: flex;
+                  align-items: flex-start;
+                }
+                
+                .contact-option svg {
+                  color: #212529;
+                  margin-right: 12px;
+                  margin-top: 2px;
+                }
+                
+                .contact-option .label {
+                  margin: 0;
+                  font-size: 14px;
+                  color: #6c757d;
+                  font-weight: 300;
+                  line-height: 1.2;
+                }
+                
+                .contact-option .value {
+                  margin: 0;
+                  font-weight: 500;
+                  color: #212529;
+                  text-decoration: none;
+                  font-size: 15px;
+                  display: inline-block;
+                  border-bottom: 1px solid transparent;
+                  transition: border-color 0.2s;
+                }
+                
+                .contact-option .value:hover {
+                  text-decoration: none;
+                  border-bottom-color: #212529;
+                }
+              `;
+
+          document.head.appendChild(style);
+
+          const closeBtn = notification.querySelector('.close-btn');
+          closeBtn.addEventListener('click', function () {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+              notification.remove();
+            }, 300);
+          });
+
+          setTimeout(() => {
+            notification.style.animation = 'pulse 2s infinite';
+          }, 2000);
+
+          setTimeout(() => {
+            if (document.body.contains(notification)) {
+              notification.style.animation = 'slideOut 0.3s ease-in forwards';
+              setTimeout(() => {
+                notification.remove();
+              }, 300);
+            }
+          }, 10000);
+        });
+      }
+    });
+  </script>
+
+</body>
+
+</html>
