@@ -1,1 +1,1 @@
-# QA Lab Website
+# Qalab Website
