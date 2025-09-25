@@ -1,8 +1,7 @@
 (function () {
   var measurementId = 'G-9EGHJ6SEEN';
   var prodHosts = ['qalab.ai', 'www.qalab.ai'];
-  var debugEnabled = window.location.search.indexOf('ga-debug=1') !== -1;
-  if (prodHosts.indexOf(window.location.hostname) === -1 && !debugEnabled) {
+  if (prodHosts.indexOf(window.location.hostname) === -1) {
     return;
   }
 
