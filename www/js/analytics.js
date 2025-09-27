@@ -1,30 +1,33 @@
 (function () {
-  var measurementId = 'G-9EGHJ6SEEN';
   var prodHosts = ['qalab.ai', 'www.qalab.ai'];
+  var containerId = 'GTM-NWMMW3WL';
+
   if (prodHosts.indexOf(window.location.hostname) === -1) {
     return;
   }
 
-  var loader = document.createElement('script');
-  loader.async = true;
-  loader.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-  document.head.appendChild(loader);
-
   window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  window.gtag = gtag;
 
-  gtag('js', new Date());
-  gtag('config', measurementId, { send_page_view: false });
+  if (!window.google_tag_manager || !window.google_tag_manager[containerId]) {
+    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    var gtmScript = document.createElement('script');
+    gtmScript.async = true;
+    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=' + containerId;
+    document.head.appendChild(gtmScript);
+  }
+
+  function pushEvent(name, payload) {
+    var eventData = payload || {};
+    eventData.event = name;
+    window.dataLayer.push(eventData);
+  }
 
   function currentPath() {
     return window.location.pathname + window.location.search + window.location.hash;
   }
 
   function trackPageView(path) {
-    gtag('event', 'page_view', {
+    pushEvent('spa_page_view', {
       page_path: path,
       page_location: window.location.origin + path,
       page_title: document.title
@@ -58,14 +61,11 @@
   window.addEventListener('popstate', handleNavigation);
 
   document.addEventListener('click', function (event) {
-    if (!window.gtag) {
-      return;
-    }
     var button = event.target.closest('[data-ga-event="qa_lab_ai"]');
     if (!button) {
       return;
     }
-    gtag('event', 'qa_lab_ai_button_click', {
+    pushEvent('qa_lab_ai_click', {
       page_path: lastPath,
       event_label: button.textContent.trim()
     });
