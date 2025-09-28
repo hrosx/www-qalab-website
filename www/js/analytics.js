@@ -19,6 +19,7 @@
   var lastEventTimes = Object.create(null);
   var abbyConversationStarted = false;
   var abbyUserIntent = false;
+  var isIosSafari = /iP(ad|hone|od)/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent) && !/Chrome|CriOS|FxiOS/.test(navigator.userAgent);
 
   function copyPayload(payload) {
     var clone = {};
@@ -121,15 +122,29 @@
 
     link.addEventListener('click', function (event) {
       event.preventDefault();
-      pushEvent('Sign-up free trial', {
+
+      var navigated = false;
+      function navigate() {
+        if (navigated) {
+          return;
+        }
+        navigated = true;
+        window.location.href = link.href;
+      }
+
+      var payload = {
         page_path: lastPath,
         link_url: link.href,
-        link_text: link.textContent.trim()
-      }, 1500);
+        link_text: link.textContent.trim(),
+        transport_type: 'beacon',
+        event_callback: navigate,
+        event_timeout: 1500
+      };
 
-      setTimeout(function () {
-        window.location.href = link.href;
-      }, 150);
+      pushEvent('Sign-up free trial', payload, 1500);
+
+      var delay = isIosSafari ? 600 : 200;
+      setTimeout(navigate, delay);
     });
   }
 
