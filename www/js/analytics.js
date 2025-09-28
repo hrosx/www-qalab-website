@@ -91,6 +91,16 @@
         link_url: signupLink.href,
         link_text: signupLink.textContent.trim()
       });
+      return;
+    }
+
+    // Check for Contact Us clicks
+    var contactLink = event.target.closest('#contactUsLink');
+    if (contactLink) {
+      pushEvent('contact_us_click', {
+        page_path: lastPath,
+        link_text: contactLink.textContent.trim()
+      });
     }
   });
 })();
