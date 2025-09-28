@@ -19,6 +19,8 @@
   function pushEvent(name, payload) {
     var eventData = payload || {};
     eventData.event = name;
+    eventData._timestamp = Date.now();  // Add timestamp to detect duplicates
+    console.log('[GTM Debug] Pushing event:', name, eventData);
     window.dataLayer.push(eventData);
   }
 
@@ -76,9 +78,12 @@
       return;
     }
 
-    // Check for sign-up link clicks
-    var signupLink = event.target.closest('a[href*="signup"], a.nav-signup-link');
+    // Check for sign-up link clicks - use more specific selector
+    var signupLink = event.target.closest('a.nav-signup-link[href*="signup"]');
     if (signupLink) {
+      // Stop this event from being processed by other handlers
+      event.stopImmediatePropagation();
+
       var now = Date.now();
       // Prevent tracking if clicked within 1 second (duplicate click protection)
       if (now - lastSignupTime < 1000) {
@@ -101,7 +106,11 @@
       }, 3000);
 
       // Push the event that GTM expects
-      console.log('[GTM] Pushing Sign-up free trial event');
+      console.log('[GTM] Pushing Sign-up free trial event', {
+        timestamp: now,
+        element: signupLink.outerHTML,
+        target: event.target.tagName
+      });
       pushEvent('Sign-up free trial', {
         page_path: lastPath,
         link_url: signupLink.href,
