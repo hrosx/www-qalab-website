@@ -20,7 +20,20 @@
     var eventData = payload || {};
     eventData.event = name;
     eventData._timestamp = Date.now();  // Add timestamp to detect duplicates
+    eventData._random = Math.random();  // Add random ID to track unique pushes
     console.log('[GTM Debug] Pushing event:', name, eventData);
+
+    // Also log the dataLayer to see if there are duplicates
+    console.log('[GTM Debug] Current dataLayer length:', window.dataLayer.length);
+
+    // Check last few events for duplicates
+    var recentEvents = window.dataLayer.slice(-5).filter(function(item) {
+      return item.event === name;
+    });
+    if (recentEvents.length > 0) {
+      console.log('[GTM Debug] Recent', name, 'events in dataLayer:', recentEvents.length);
+    }
+
     window.dataLayer.push(eventData);
   }
 
