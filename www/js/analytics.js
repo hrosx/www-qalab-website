@@ -149,33 +149,29 @@
   }
 
   function bindQaButtons() {
-    var buttons = document.querySelectorAll('[data-ga-event="qa_lab_ai"]');
-    if (!buttons.length) {
+    if (document.__qaGlobalBound) {
       return;
     }
 
-    buttons.forEach(function (button) {
-      if (button.__qaBound) {
+    document.__qaGlobalBound = true;
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('[data-ga-event="qa_lab_ai"]');
+      if (!button) {
         return;
       }
 
-      function handleQaClick() {
-        pushEvent('qa_lab_ai_click', {
-          page_path: lastPath,
-          event_label: button.textContent.trim()
-        }, 800);
+      pushEvent('qa_lab_ai_click', {
+        page_path: lastPath,
+        event_label: button.textContent.trim()
+      }, 800);
 
-        abbyUserIntent = true;
-        resetAbbyConversation();
-        recordAbbyConversation({
-          page_path: lastPath,
-          trigger: 'cta_click'
-        });
-      }
-
-      button.__qaBound = true;
-      button.addEventListener('click', handleQaClick, true);
-    });
+      abbyUserIntent = true;
+      resetAbbyConversation();
+      recordAbbyConversation({
+        page_path: lastPath,
+        trigger: 'cta_click'
+      });
+    }, true);
   }
 
   function bindContactHandler() {
