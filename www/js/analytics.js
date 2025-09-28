@@ -83,7 +83,10 @@
     lastTime: 0
   };
 
-  document.addEventListener('click', function (event) {
+  // Add flag to prevent multiple event listeners
+  if (!window._gtmClickListenerAdded) {
+    window._gtmClickListenerAdded = true;
+    document.addEventListener('click', function (event) {
     // Check for QA Lab AI button clicks
     var button = event.target.closest('[data-ga-event="qa_lab_ai"]');
     if (button) {
@@ -98,45 +101,43 @@
     var signupLink = event.target.closest('a.nav-signup-link[href*="signup"]');
     if (signupLink) {
       event.preventDefault(); // Stop immediate navigation
+      event.stopPropagation(); // Stop event from bubbling
 
       var now = Date.now();
       var state = window._gtmSignupState;
 
-      // Prevent tracking if clicked within 2 seconds
-      if (now - state.lastTime < 2000) {
-        console.log('[GTM] Duplicate sign-up click prevented (within 2s)', now - state.lastTime);
+      // Prevent tracking if clicked within 5 seconds (increased window)
+      if (state.tracked && (now - state.lastTime < 5000)) {
+        console.log('[GTM] Duplicate sign-up click blocked (within 5s)', now - state.lastTime);
         // Still navigate but don't track
         window.location.href = signupLink.href;
         return;
       }
 
-      // Update state
+      // Update state BEFORE pushing event
       state.lastTime = now;
+      state.tracked = true;
 
-      // Push the event that GTM expects
-      console.log('[GTM] Pushing Sign-up free trial event', {
+      // Push the event that GTM expects - ONLY ONCE
+      console.log('[GTM] Pushing Sign-up free trial event (single)', {
         timestamp: now,
         link_url: signupLink.href
       });
 
-      // Push event with transport type for reliable delivery
+      // Simple push without callback to avoid multiple triggers
       pushEvent('Sign-up free trial', {
         page_path: lastPath,
         link_url: signupLink.href,
         link_text: signupLink.textContent.trim(),
-        transport_type: 'beacon',  // Tells GA to use beacon API
-        event_callback: function() {
-          // Navigate after GA confirms the hit was sent
-          console.log('[GTM] Event sent, navigating...');
-          window.location.href = signupLink.href;
-        }
+        transport_type: 'beacon'  // Reliable delivery
       });
 
-      // Fallback navigation in case callback doesn't fire
+      // Navigate after short delay
       setTimeout(function() {
-        console.log('[GTM] Fallback navigation after timeout');
+        // Reset flag after navigation
+        state.tracked = false;
         window.location.href = signupLink.href;
-      }, 500);
+      }, 200);
 
       return;
     }
@@ -150,4 +151,5 @@
       });
     }
   });
+  } // Close the if statement for click listener
 })();
