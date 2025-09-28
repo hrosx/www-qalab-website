@@ -76,9 +76,12 @@
   window.addEventListener('popstate', handleNavigation);
 
   // Track sign-up clicks with debouncing to prevent double triggers
-  var signupTracked = false;
-  var signupResetTimer;
-  var lastSignupTime = 0;
+  // Use window object to ensure persistence across any re-initialization
+  window._gtmSignupState = window._gtmSignupState || {
+    tracked: false,
+    resetTimer: null,
+    lastTime: 0
+  };
 
   document.addEventListener('click', function (event) {
     // Check for QA Lab AI button clicks
@@ -96,39 +99,49 @@
     if (signupLink) {
       // Stop this event from being processed by other handlers
       event.stopImmediatePropagation();
+      event.preventDefault(); // Prevent default temporarily
 
       var now = Date.now();
-      // Prevent tracking if clicked within 1 second (duplicate click protection)
-      if (now - lastSignupTime < 1000) {
-        console.log('[GTM] Duplicate sign-up click prevented (within 1s)');
+      var state = window._gtmSignupState;
+
+      // Prevent tracking if clicked within 5 seconds (increase from 1s)
+      if (now - state.lastTime < 5000) {
+        console.log('[GTM] Duplicate sign-up click prevented (within 5s)', now - state.lastTime);
+        // Still navigate after a small delay
+        setTimeout(function() {
+          window.location.href = signupLink.href;
+        }, 100);
         return;
       }
 
-      // Also check the 3-second navigation debounce
-      if (signupTracked) {
-        console.log('[GTM] Sign-up click prevented (within 3s debounce)');
-        return;
-      }
-
-      lastSignupTime = now;
-      signupTracked = true;
-      clearTimeout(signupResetTimer);
-      signupResetTimer = setTimeout(function() {
-        signupTracked = false;
+      // Update state
+      state.lastTime = now;
+      state.tracked = true;
+      clearTimeout(state.resetTimer);
+      state.resetTimer = setTimeout(function() {
+        state.tracked = false;
         console.log('[GTM] Sign-up tracking reset');
-      }, 3000);
+      }, 5000);
 
-      // Push the event that GTM expects
-      console.log('[GTM] Pushing Sign-up free trial event', {
+      // Push the event that GTM expects - but only ONCE
+      console.log('[GTM] Pushing Sign-up free trial event (ONCE)', {
         timestamp: now,
         element: signupLink.outerHTML,
         target: event.target.tagName
       });
+
+      // Push event only once
       pushEvent('Sign-up free trial', {
         page_path: lastPath,
         link_url: signupLink.href,
         link_text: signupLink.textContent.trim()
       });
+
+      // Navigate after a small delay to ensure event is sent
+      setTimeout(function() {
+        window.location.href = signupLink.href;
+      }, 200);
+
       return;
     }
 
