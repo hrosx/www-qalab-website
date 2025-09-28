@@ -16,24 +16,39 @@
     document.head.appendChild(gtmScript);
   }
 
-  function pushEvent(name, payload) {
-    var eventData = payload || {};
-    eventData.event = name;
-    eventData._timestamp = Date.now();  // Add timestamp to detect duplicates
-    eventData._random = Math.random();  // Add random ID to track unique pushes
-    console.log('[GTM Debug] Pushing event:', name, eventData);
+  var lastEventTimes = Object.create(null);
+  var abbyConversationStarted = false;
 
-    // Also log the dataLayer to see if there are duplicates
-    console.log('[GTM Debug] Current dataLayer length:', window.dataLayer.length);
+  function copyPayload(payload) {
+    var clone = {};
+    if (!payload || typeof payload !== 'object') {
+      return clone;
+    }
+    for (var key in payload) {
+      if (Object.prototype.hasOwnProperty.call(payload, key)) {
+        var value = payload[key];
+        if (value !== undefined && value !== null) {
+          clone[key] = value;
+        }
+      }
+    }
+    return clone;
+  }
 
-    // Check last few events for duplicates
-    var recentEvents = window.dataLayer.slice(-5).filter(function(item) {
-      return item.event === name;
-    });
-    if (recentEvents.length > 0) {
-      console.log('[GTM Debug] Recent', name, 'events in dataLayer:', recentEvents.length);
+  function pushEvent(name, payload, dedupeWindowMs) {
+    var now = Date.now();
+    var windowMs = typeof dedupeWindowMs === 'number' ? dedupeWindowMs : 400;
+    if (windowMs >= 0) {
+      var last = lastEventTimes[name];
+      if (last && now - last < windowMs) {
+        return;
+      }
     }
 
+    lastEventTimes[name] = now;
+    var eventData = copyPayload(payload);
+    eventData.event = name;
+    eventData.event_timestamp = now;
     window.dataLayer.push(eventData);
   }
 
@@ -41,15 +56,16 @@
     return window.location.pathname + window.location.search + window.location.hash;
   }
 
+  var lastPath = currentPath();
+
   function trackPageView(path) {
     pushEvent('spa_page_view', {
       page_path: path,
       page_location: window.location.origin + path,
       page_title: document.title
-    });
+    }, -1); // never dedupe page views
   }
 
-  var lastPath = currentPath();
   trackPageView(lastPath);
 
   function handleNavigation() {
@@ -59,6 +75,7 @@
     }
     lastPath = path;
     trackPageView(path);
+    setTimeout(bindInteractionHandlers, 0);
   }
 
   ['pushState', 'replaceState'].forEach(function (method) {
@@ -75,81 +92,137 @@
 
   window.addEventListener('popstate', handleNavigation);
 
-  // Track sign-up clicks with debouncing to prevent double triggers
-  // Use window object to ensure persistence across any re-initialization
-  window._gtmSignupState = window._gtmSignupState || {
-    tracked: false,
-    resetTimer: null,
-    lastTime: 0
-  };
+  function recordAbbyConversation(meta) {
+    if (abbyConversationStarted) {
+      return;
+    }
+    abbyConversationStarted = true;
+    pushEvent('abby_conversation_start', copyPayload(meta), 0);
+  }
 
-  // Add flag to prevent multiple event listeners
-  if (!window._gtmClickListenerAdded) {
-    window._gtmClickListenerAdded = true;
-    document.addEventListener('click', function (event) {
-    // Check for QA Lab AI button clicks
-    var button = event.target.closest('[data-ga-event="qa_lab_ai"]');
-    if (button) {
-      pushEvent('qa_lab_ai_click', {
-        page_path: lastPath,
-        event_label: button.textContent.trim()
-      });
+  function resetAbbyConversation() {
+    abbyConversationStarted = false;
+  }
+
+  function bindInteractionHandlers() {
+    bindSignupHandler();
+    bindQaButtons();
+    bindContactHandler();
+  }
+
+  function bindSignupHandler() {
+    var link = document.querySelector('a.nav-signup-link[href*="signup"]');
+    if (!link || link.__gtmBound) {
       return;
     }
 
-    // Check for sign-up link clicks - use more specific selector
-    var signupLink = event.target.closest('a.nav-signup-link[href*="signup"]');
-    if (signupLink) {
-      event.preventDefault(); // Stop immediate navigation
-      event.stopPropagation(); // Stop event from bubbling
+    link.__gtmBound = true;
 
-      var now = Date.now();
-      var state = window._gtmSignupState;
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      pushEvent('Sign-up free trial', {
+        page_path: lastPath,
+        link_url: link.href,
+        link_text: link.textContent.trim()
+      }, 1500);
 
-      // Prevent tracking if clicked within 5 seconds (increased window)
-      if (state.tracked && (now - state.lastTime < 5000)) {
-        console.log('[GTM] Duplicate sign-up click blocked (within 5s)', now - state.lastTime);
-        // Still navigate but don't track
-        window.location.href = signupLink.href;
+      setTimeout(function () {
+        window.location.href = link.href;
+      }, 150);
+    });
+  }
+
+  function bindQaButtons() {
+    var buttons = document.querySelectorAll('[data-ga-event="qa_lab_ai"]');
+    if (!buttons.length) {
+      return;
+    }
+
+    buttons.forEach(function (button) {
+      if (button.__qaBound) {
         return;
       }
 
-      // Update state BEFORE pushing event
-      state.lastTime = now;
-      state.tracked = true;
+      button.__qaBound = true;
+      button.addEventListener('click', function () {
+        pushEvent('qa_lab_ai_click', {
+          page_path: lastPath,
+          event_label: button.textContent.trim()
+        }, 800);
 
-      // Push the event that GTM expects - ONLY ONCE
-      console.log('[GTM] Pushing Sign-up free trial event (single)', {
-        timestamp: now,
-        link_url: signupLink.href
+        if (!abbyConversationStarted) {
+          recordAbbyConversation({
+            page_path: lastPath,
+            trigger: 'cta_click'
+          });
+        }
       });
+    });
+  }
 
-      // Simple push without callback to avoid multiple triggers
-      pushEvent('Sign-up free trial', {
-        page_path: lastPath,
-        link_url: signupLink.href,
-        link_text: signupLink.textContent.trim(),
-        transport_type: 'beacon'  // Reliable delivery
-      });
-
-      // Navigate after short delay
-      setTimeout(function() {
-        // Reset flag after navigation
-        state.tracked = false;
-        window.location.href = signupLink.href;
-      }, 200);
-
+  function bindContactHandler() {
+    var contactLink = document.getElementById('contactUsLink');
+    if (!contactLink || contactLink.__gtmBound) {
       return;
     }
 
-    // Check for Contact Us clicks
-    var contactLink = event.target.closest('#contactUsLink');
-    if (contactLink) {
+    contactLink.__gtmBound = true;
+    contactLink.addEventListener('click', function () {
       pushEvent('contact_us_click', {
         page_path: lastPath,
         link_text: contactLink.textContent.trim()
+      }, 800);
+    });
+  }
+
+  window.addEventListener('message', function (event) {
+    if (event.origin !== 'https://assistant.qalab.ai') {
+      return;
+    }
+
+    var data = event.data;
+    if (!data) {
+      return;
+    }
+
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) {
+        // leave as string if not JSON
+      }
+    }
+
+    var action = null;
+    if (data && typeof data === 'object') {
+      action = data.action || data.type;
+      if (!action && data.payload && typeof data.payload === 'object') {
+        action = data.payload.action || data.payload.type;
+      }
+    } else if (typeof data === 'string') {
+      action = data;
+    }
+
+    if (!action) {
+      return;
+    }
+
+    var normalized = String(action).toLowerCase();
+
+    if (normalized.indexOf('conversation') !== -1 && normalized.indexOf('start') !== -1) {
+      recordAbbyConversation({
+        page_path: lastPath,
+        trigger: 'widget_message',
+        message_action: action
       });
+      return;
+    }
+
+    if (normalized.indexOf('conversation') !== -1 && normalized.indexOf('end') !== -1) {
+      resetAbbyConversation();
+      return;
     }
   });
-  } // Close the if statement for click listener
+
+  bindInteractionHandlers();
 })();
