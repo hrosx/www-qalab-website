@@ -18,6 +18,7 @@
 
   var lastEventTimes = Object.create(null);
   var abbyConversationStarted = false;
+  var abbyUserIntent = false;
 
   function copyPayload(payload) {
     var clone = {};
@@ -150,6 +151,7 @@
           event_label: button.textContent.trim()
         }, 800);
 
+        abbyUserIntent = true;
         if (!abbyConversationStarted) {
           recordAbbyConversation({
             page_path: lastPath,
@@ -210,16 +212,19 @@
     var normalized = String(action).toLowerCase();
 
     if (normalized.indexOf('conversation') !== -1 && normalized.indexOf('start') !== -1) {
-      recordAbbyConversation({
-        page_path: lastPath,
-        trigger: 'widget_message',
-        message_action: action
-      });
+      if (abbyUserIntent) {
+        recordAbbyConversation({
+          page_path: lastPath,
+          trigger: 'widget_message',
+          message_action: action
+        });
+      }
       return;
     }
 
     if (normalized.indexOf('conversation') !== -1 && normalized.indexOf('end') !== -1) {
       resetAbbyConversation();
+      abbyUserIntent = false;
       return;
     }
   });
