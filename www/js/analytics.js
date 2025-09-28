@@ -159,8 +159,7 @@
         return;
       }
 
-      button.__qaBound = true;
-      button.addEventListener('click', function () {
+      function handleQaClick() {
         pushEvent('qa_lab_ai_click', {
           page_path: lastPath,
           event_label: button.textContent.trim()
@@ -172,7 +171,10 @@
           page_path: lastPath,
           trigger: 'cta_click'
         });
-      });
+      }
+
+      button.__qaBound = true;
+      button.addEventListener('click', handleQaClick, true);
     });
   }
 

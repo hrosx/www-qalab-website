@@ -188,17 +188,80 @@ The new analytics.js logs key events:
 - `https://www.googleapis.com/auth/tagmanager.edit.containers`
 - `https://www.googleapis.com/auth/tagmanager.readonly`
 
-### Key API Endpoints
+### Key API Endpoints & IDs
+- **GTM Account ID**: 6314566179
+- **GTM Container ID**: 230830811
+- **GA4 Property**: properties/506457494
+- **GA4 Measurement ID**: G-9EGHJ6SEEN
+
+### Common GTM API Operations
+
+#### 1. Get Current Workspace
 ```bash
-# List tags
-GET https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/13/tags
-
-# List triggers
-GET https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/13/triggers
-
-# GA4 Reporting
-POST https://analyticsdata.googleapis.com/v1beta/properties/506457494:runReport
+curl -s -X GET 'https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces' \
+  -H 'Authorization: Bearer [TOKEN]'
 ```
+
+#### 2. List All Tags in Workspace
+```bash
+curl -s -X GET 'https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/[WORKSPACE_ID]/tags' \
+  -H 'Authorization: Bearer [TOKEN]'
+```
+
+#### 3. Delete a Tag (e.g., Google Tag)
+```bash
+curl -X DELETE 'https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/[WORKSPACE_ID]/tags/[TAG_ID]' \
+  -H 'Authorization: Bearer [TOKEN]'
+```
+
+#### 4. Create GA4 Event Tag
+```bash
+curl -X POST 'https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/[WORKSPACE_ID]/tags' \
+  -H 'Authorization: Bearer [TOKEN]' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Tag Name",
+    "type": "gaawe",
+    "parameter": [
+      {"type": "boolean", "key": "sendEcommerceData", "value": "false"},
+      {"type": "template", "key": "eventName", "value": "event_name_here"},
+      {"type": "template", "key": "measurementIdOverride", "value": "G-9EGHJ6SEEN"}
+    ],
+    "firingTriggerId": ["TRIGGER_ID"],
+    "tagFiringOption": "oncePerEvent"
+  }'
+```
+
+#### 5. Update Existing Tag
+```bash
+curl -X PUT 'https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/[WORKSPACE_ID]/tags/[TAG_ID]' \
+  -H 'Authorization: Bearer [TOKEN]' \
+  -H 'Content-Type: application/json' \
+  -d '[COMPLETE_TAG_JSON]'
+```
+
+#### 6. Check for Google Tag Issues
+```bash
+# Find all Google Tags (type: googtag) - THESE CAUSE DUPLICATES
+curl -s -X GET '[workspace_tags_url]' | python3 -c "
+import json, sys
+tags = json.load(sys.stdin).get('tag', [])
+google_tags = [t for t in tags if t.get('type') == 'googtag']
+if google_tags:
+    print('WARNING: Google Tag found - will cause duplicate events!')
+    for t in google_tags:
+        print(f\"  ID {t['tagId']}: {t.get('name')}\")
+else:
+    print('✓ No Google Tags found')
+"
+```
+
+### Known Trigger IDs
+- **Trigger 16**: Sign-up free trial (custom event)
+- **Trigger 31**: abby_conversation_start (custom event)
+- **Trigger 38**: qa_lab_ai_click (custom event)
+- **Trigger 41**: contact_us_click (custom event)
+- **Trigger 2147479553**: All Pages (built-in)
 
 ## Maintenance Notes
 
@@ -218,6 +281,46 @@ POST https://analyticsdata.googleapis.com/v1beta/properties/506457494:runReport
 - Don't use GTM's built-in click triggers for cross-domain links
 - Always use deduplication for user interactions
 - Test in GTM Preview mode before publishing
+
+## CRITICAL: Google Tag Auto-Detection Issue
+
+### The Problem
+GTM automatically suggests adding a "Google Tag" when it detects GA4 measurement IDs in your tags. This suggestion appears as a blue banner in GTM interface. **DO NOT ADD THIS TAG.**
+
+### Why This Happens
+- GTM sees you're using measurement ID `G-9EGHJ6SEEN`
+- It assumes you need a Google Tag for configuration
+- It doesn't know you're using `measurementIdOverride` on individual tags
+
+### The Solution
+**Always check for and remove Google Tags:**
+
+```bash
+# Quick check for Google Tag in workspace
+curl -s -X GET 'https://www.googleapis.com/tagmanager/v2/accounts/6314566179/containers/230830811/workspaces/[WORKSPACE_ID]/tags' \
+  -H 'Authorization: Bearer [TOKEN]' | grep -c '"type":"googtag"'
+# If result > 0, Google Tag exists and should be deleted
+```
+
+### Correct Configuration
+✅ **Use ONLY individual GA4 Event tags with measurementIdOverride**
+```json
+{
+  "type": "gaawe",
+  "parameter": [
+    {"key": "measurementIdOverride", "value": "G-9EGHJ6SEEN"},
+    {"key": "eventName", "value": "your_event_name"}
+  ]
+}
+```
+
+❌ **Never use Google Tag (type: googtag) with individual GA4 Event tags**
+
+### If GTM Keeps Suggesting Google Tag
+1. Ignore the suggestion
+2. Close the banner
+3. Never click "Add to workspace"
+4. The suggestion will reappear but won't affect functionality
 
 ## Key Lessons Learned
 
