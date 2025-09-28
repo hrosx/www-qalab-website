@@ -97,50 +97,46 @@
     // Check for sign-up link clicks - use more specific selector
     var signupLink = event.target.closest('a.nav-signup-link[href*="signup"]');
     if (signupLink) {
-      // Stop this event from being processed by other handlers
-      event.stopImmediatePropagation();
-      event.preventDefault(); // Prevent default temporarily
+      event.preventDefault(); // Stop immediate navigation
 
       var now = Date.now();
       var state = window._gtmSignupState;
 
-      // Prevent tracking if clicked within 5 seconds (increase from 1s)
-      if (now - state.lastTime < 5000) {
-        console.log('[GTM] Duplicate sign-up click prevented (within 5s)', now - state.lastTime);
-        // Still navigate after a small delay
-        setTimeout(function() {
-          window.location.href = signupLink.href;
-        }, 100);
+      // Prevent tracking if clicked within 2 seconds
+      if (now - state.lastTime < 2000) {
+        console.log('[GTM] Duplicate sign-up click prevented (within 2s)', now - state.lastTime);
+        // Still navigate but don't track
+        window.location.href = signupLink.href;
         return;
       }
 
       // Update state
       state.lastTime = now;
-      state.tracked = true;
-      clearTimeout(state.resetTimer);
-      state.resetTimer = setTimeout(function() {
-        state.tracked = false;
-        console.log('[GTM] Sign-up tracking reset');
-      }, 5000);
 
-      // Push the event that GTM expects - but only ONCE
-      console.log('[GTM] Pushing Sign-up free trial event (ONCE)', {
+      // Push the event that GTM expects
+      console.log('[GTM] Pushing Sign-up free trial event', {
         timestamp: now,
-        element: signupLink.outerHTML,
-        target: event.target.tagName
+        link_url: signupLink.href
       });
 
-      // Push event only once
+      // Push event with transport type for reliable delivery
       pushEvent('Sign-up free trial', {
         page_path: lastPath,
         link_url: signupLink.href,
-        link_text: signupLink.textContent.trim()
+        link_text: signupLink.textContent.trim(),
+        transport_type: 'beacon',  // Tells GA to use beacon API
+        event_callback: function() {
+          // Navigate after GA confirms the hit was sent
+          console.log('[GTM] Event sent, navigating...');
+          window.location.href = signupLink.href;
+        }
       });
 
-      // Navigate after a small delay to ensure event is sent
+      // Fallback navigation in case callback doesn't fire
       setTimeout(function() {
+        console.log('[GTM] Fallback navigation after timeout');
         window.location.href = signupLink.href;
-      }, 200);
+      }, 500);
 
       return;
     }
