@@ -106,6 +106,23 @@
     abbyConversationStarted = false;
   }
 
+  function trackAbbyEngagement(trigger, label) {
+    pushEvent('qa_lab_ai_click', {
+      page_path: lastPath,
+      event_label: label || 'Talk to Abby',
+      trigger_source: trigger || 'cta_click'
+    }, 800);
+
+    abbyUserIntent = true;
+    resetAbbyConversation();
+    recordAbbyConversation({
+      page_path: lastPath,
+      trigger: trigger || 'cta_click'
+    });
+  }
+
+  window.qalabTrackAbbyEngagement = trackAbbyEngagement;
+
   function bindInteractionHandlers() {
     bindSignupHandler();
     bindQaButtons();
@@ -160,17 +177,7 @@
         return;
       }
 
-      pushEvent('qa_lab_ai_click', {
-        page_path: lastPath,
-        event_label: button.textContent.trim()
-      }, 800);
-
-      abbyUserIntent = true;
-      resetAbbyConversation();
-      recordAbbyConversation({
-        page_path: lastPath,
-        trigger: 'cta_click'
-      });
+      trackAbbyEngagement('cta_click', button.textContent.trim());
     }, true);
   }
 

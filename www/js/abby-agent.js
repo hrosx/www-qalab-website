@@ -61,15 +61,20 @@ function expandAbbyAgent() {
     console.error('Error accessing iframes:', e);
   }
   
-  // Visual feedback that the button was clicked
   const btn = document.getElementById('talkToAbbyBtn');
+  const btnLabel = btn ? btn.textContent.trim() : 'Talk to Abby';
+
+  if (window.qalabTrackAbbyEngagement) {
+    window.qalabTrackAbbyEngagement('expand_function', btnLabel);
+  }
+
   if (btn) {
     btn.classList.add('btn-success');
     setTimeout(() => {
       btn.classList.remove('btn-success');
     }, 500);
   }
-  
+
   console.log('Abby agent expansion triggered - process complete');
   
   return false;
