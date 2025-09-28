@@ -99,7 +99,7 @@
       return;
     }
     abbyConversationStarted = true;
-    pushEvent('abby_conversation_start', copyPayload(meta), 0);
+    pushEvent('abby_conversation_start', copyPayload(meta), 1200);
   }
 
   function resetAbbyConversation() {
@@ -167,12 +167,11 @@
         }, 800);
 
         abbyUserIntent = true;
-        if (!abbyConversationStarted) {
-          recordAbbyConversation({
-            page_path: lastPath,
-            trigger: 'cta_click'
-          });
-        }
+        resetAbbyConversation();
+        recordAbbyConversation({
+          page_path: lastPath,
+          trigger: 'cta_click'
+        });
       });
     });
   }
