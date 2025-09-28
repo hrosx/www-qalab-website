@@ -63,6 +63,7 @@
   // Track sign-up clicks with debouncing to prevent double triggers
   var signupTracked = false;
   var signupResetTimer;
+  var lastSignupTime = 0;
 
   document.addEventListener('click', function (event) {
     // Check for QA Lab AI button clicks
@@ -77,15 +78,30 @@
 
     // Check for sign-up link clicks
     var signupLink = event.target.closest('a[href*="signup"], a.nav-signup-link');
-    if (signupLink && !signupTracked) {
-      // Prevent double tracking for 3 seconds (in case user navigates back)
+    if (signupLink) {
+      var now = Date.now();
+      // Prevent tracking if clicked within 1 second (duplicate click protection)
+      if (now - lastSignupTime < 1000) {
+        console.log('[GTM] Duplicate sign-up click prevented (within 1s)');
+        return;
+      }
+
+      // Also check the 3-second navigation debounce
+      if (signupTracked) {
+        console.log('[GTM] Sign-up click prevented (within 3s debounce)');
+        return;
+      }
+
+      lastSignupTime = now;
       signupTracked = true;
       clearTimeout(signupResetTimer);
       signupResetTimer = setTimeout(function() {
         signupTracked = false;
+        console.log('[GTM] Sign-up tracking reset');
       }, 3000);
 
       // Push the event that GTM expects
+      console.log('[GTM] Pushing Sign-up free trial event');
       pushEvent('Sign-up free trial', {
         page_path: lastPath,
         link_url: signupLink.href,
