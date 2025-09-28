@@ -60,14 +60,37 @@
 
   window.addEventListener('popstate', handleNavigation);
 
+  // Track sign-up clicks with debouncing to prevent double triggers
+  var signupTracked = false;
+  var signupResetTimer;
+
   document.addEventListener('click', function (event) {
+    // Check for QA Lab AI button clicks
     var button = event.target.closest('[data-ga-event="qa_lab_ai"]');
-    if (!button) {
+    if (button) {
+      pushEvent('qa_lab_ai_click', {
+        page_path: lastPath,
+        event_label: button.textContent.trim()
+      });
       return;
     }
-    pushEvent('qa_lab_ai_click', {
-      page_path: lastPath,
-      event_label: button.textContent.trim()
-    });
+
+    // Check for sign-up link clicks
+    var signupLink = event.target.closest('a[href*="signup"], a.nav-signup-link');
+    if (signupLink && !signupTracked) {
+      // Prevent double tracking for 3 seconds (in case user navigates back)
+      signupTracked = true;
+      clearTimeout(signupResetTimer);
+      signupResetTimer = setTimeout(function() {
+        signupTracked = false;
+      }, 3000);
+
+      // Push the event that GTM expects
+      pushEvent('Sign-up free trial', {
+        page_path: lastPath,
+        link_url: signupLink.href,
+        link_text: signupLink.textContent.trim()
+      });
+    }
   });
 })();
