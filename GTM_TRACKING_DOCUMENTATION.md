@@ -85,8 +85,10 @@ function pushEvent(name, payload, dedupeWindowMs) {
 
 #### Cross-Domain Communication
 - Listens for PostMessage events from `https://assistant.qalab.ai`
-- Detects conversation start/end messages
-- Properly handles both string and object message formats
+- Voice widget now posts `{source: 'qalabs-voice-assistant', event: 'conversation_start'|'conversation_end'}` **only when `tenantId === 'qalabs'`**
+- Parent page pushes `abby_conversation_start` on the start message and resets state on the end message
+- Customers embedding the widget without tagging never send the message, so they remain unaffected
+- Still handles legacy string/object payloads for backward compatibility
 
 ### 2. GTM Configuration (After Cleanup - Live Version 15)
 
@@ -176,9 +178,10 @@ The new analytics.js logs key events:
 1. **Single Event Source**: All tracking logic centralized in analytics.js
 2. **Deduplication**: Time-based windows prevent rapid duplicate fires
 3. **Proper Event Binding**: Flags prevent multiple listener attachment
-4. **Cross-Domain Handling**: 150ms delay ensures events send before navigation
-5. **SPA Support**: History API interception for route change tracking
-6. **Clean Separation**: GTM tags only fire on custom events, not page loads
+4. **Cross-Domain Handling**: Widget-originated `postMessage` drives conversation tracking; no message = no event
+5. **Avoid Google Tag**: Never add the auto-forwarding Google Tag alongside custom GA4 events
+6. **SPA Support**: History API interception for route change tracking
+7. **Clean Separation**: GTM tags only fire on custom events, not page loads
 
 ## API Access for Management
 

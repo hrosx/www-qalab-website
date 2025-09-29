@@ -215,19 +215,29 @@
 
     var action = null;
     if (data && typeof data === 'object') {
-      action = data.action || data.type;
+      action = data.action || data.type || data.event;
       if (!action && data.payload && typeof data.payload === 'object') {
-        action = data.payload.action || data.payload.type;
+        action = data.payload.action || data.payload.type || data.payload.event;
       }
     } else if (typeof data === 'string') {
       action = data;
+    }
+
+    if (data && data.source === 'qalabs-voice-assistant') {
+      if (data.event === 'conversation_start') {
+        pushAbbyConversation('widget_message', data.label || data.button_label || 'VOICE CHAT');
+        abbyUserIntent = true;
+      } else if (data.event === 'conversation_end') {
+        resetAbbyConversation();
+        abbyUserIntent = false;
+      }
+      return;
     }
 
     if (!action) {
       return;
     }
 
-    if (data && data.source === 'qalabs-voice-assistant') {
       if (data.event === 'conversation_start') {
         pushAbbyConversation('widget_message', data.label || data.button_label || 'VOICE CHAT');
         abbyUserIntent = true;
