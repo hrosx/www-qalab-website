@@ -62,12 +62,6 @@ function expandAbbyAgent() {
   }
   
   const btn = document.getElementById('talkToAbbyBtn');
-  const btnLabel = btn ? btn.textContent.trim() : 'Talk to Abby';
-
-  if (window.qalabTrackAbbyEngagement) {
-    window.qalabTrackAbbyEngagement('expand_function', btnLabel);
-  }
-
   if (btn) {
     btn.classList.add('btn-success');
     setTimeout(() => {
