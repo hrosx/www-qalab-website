@@ -107,17 +107,22 @@
   }
 
   function trackAbbyEngagement(trigger, label) {
+    var source = trigger || 'cta_click';
+    var btnLabel = label || 'Talk to Abby';
+    console.log('[Analytics] Tracking Abby engagement via', source, 'label:', btnLabel);
+
     pushEvent('qa_lab_ai_click', {
       page_path: lastPath,
-      event_label: label || 'Talk to Abby',
-      trigger_source: trigger || 'cta_click'
+      event_label: btnLabel,
+      trigger_source: source
     }, 800);
 
     abbyUserIntent = true;
     resetAbbyConversation();
     recordAbbyConversation({
       page_path: lastPath,
-      trigger: trigger || 'cta_click'
+      trigger: source,
+      button_label: btnLabel
     });
   }
 
