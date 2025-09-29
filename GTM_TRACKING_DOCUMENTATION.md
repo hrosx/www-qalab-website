@@ -79,11 +79,9 @@ function pushEvent(name, payload, dedupeWindowMs) {
    - 800ms deduplication window
 
 5. **ABBY Conversation Start** (`abby_conversation_start`)
-   - Triggered by:
-     - QA Lab AI button click (sets user intent and can fire immediately)
-     - PostMessage from iframe with conversation start action (honored only after intent is true)
-   - Uses flags to prevent duplicate starts and to track user intent across messages
-   - Resets intent and state on conversation end message
+   - Triggered by iframe `postMessage` events from the voice assistant widget (`source: 'qalabs-voice-assistant', event: 'conversation_start'`)
+   - Parent page listens for that message and pushes the GA4 event with dedupe protection
+   - `conversation_end` messages reset the state so the next session can be tracked
 
 #### Cross-Domain Communication
 - Listens for PostMessage events from `https://assistant.qalab.ai`

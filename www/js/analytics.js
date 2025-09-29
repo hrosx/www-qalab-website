@@ -106,19 +106,9 @@
     abbyConversationStarted = false;
   }
 
-  function trackAbbyEngagement(trigger, label) {
-    var source = trigger || 'cta_click';
+  function pushAbbyConversation(trigger, label) {
+    var source = trigger || 'widget_message';
     var btnLabel = label || 'Talk to Abby';
-    console.log('[Analytics] Tracking Abby engagement via', source, 'label:', btnLabel);
-
-    pushEvent('qa_lab_ai_click', {
-      page_path: lastPath,
-      event_label: btnLabel,
-      trigger_source: source
-    }, 800);
-
-    abbyUserIntent = true;
-    resetAbbyConversation();
     recordAbbyConversation({
       page_path: lastPath,
       trigger: source,
@@ -126,7 +116,7 @@
     });
   }
 
-  window.qalabTrackAbbyEngagement = trackAbbyEngagement;
+  window.qalabTrackAbbyEngagement = pushAbbyConversation;
 
   function bindInteractionHandlers() {
     bindSignupHandler();
@@ -182,7 +172,11 @@
         return;
       }
 
-      trackAbbyEngagement('cta_click', button.textContent.trim());
+      pushEvent('qa_lab_ai_click', {
+        page_path: lastPath,
+        event_label: button.textContent.trim(),
+        trigger_source: 'cta_click'
+      }, 800);
     }, true);
   }
 
@@ -230,6 +224,17 @@
     }
 
     if (!action) {
+      return;
+    }
+
+    if (data && data.source === 'qalabs-voice-assistant') {
+      if (data.event === 'conversation_start') {
+        pushAbbyConversation('widget_message', data.label || data.button_label || 'VOICE CHAT');
+        abbyUserIntent = true;
+      } else if (data.event === 'conversation_end') {
+        resetAbbyConversation();
+        abbyUserIntent = false;
+      }
       return;
     }
 
