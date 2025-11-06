@@ -61,7 +61,6 @@ function expandAbbyAgent() {
     console.error('Error accessing iframes:', e);
   }
   
-  // Visual feedback that the button was clicked
   const btn = document.getElementById('talkToAbbyBtn');
   if (btn) {
     btn.classList.add('btn-success');
@@ -69,7 +68,7 @@ function expandAbbyAgent() {
       btn.classList.remove('btn-success');
     }, 500);
   }
-  
+
   console.log('Abby agent expansion triggered - process complete');
   
   return false;
