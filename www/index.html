@@ -223,6 +223,70 @@
         margin-bottom: 20px;
       }
     }
+
+    .admin-slider {
+      position: relative;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .admin-slider img {
+      width: 100%;
+      border-radius: 1rem;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+      object-fit: cover;
+    }
+
+    .admin-slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(33, 37, 41, 0.85);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .admin-slider-btn:hover,
+    .admin-slider-btn:focus {
+      background: #ffc107;
+      color: #212529;
+      outline: none;
+    }
+
+    .admin-slider-btn-prev {
+      left: 10px;
+    }
+
+    .admin-slider-btn-next {
+      right: 10px;
+    }
+
+    .admin-slider-indicator {
+      margin-top: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .admin-heading,
+    .copilot-heading,
+    .testimonials-heading {
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      line-height: 1.1;
+    }
+
+    .section-label {
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+      letter-spacing: 0.15rem;
+    }
   </style>
 
 </head>
@@ -262,7 +326,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#numbers">
-              <span data-translate="nav.numbers">Numbers</span>
+              <span data-translate="nav.numbers">Stats</span>
             </a>
           </li>
           <li class="nav-item">
@@ -273,6 +337,21 @@
           <li class="nav-item">
             <a class="nav-link" href="#" id="contactUsLink">
               <span data-translate="nav.contactUs">Contact Us</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#admin-tools">
+              <span data-translate="nav.adminTools">Admin Tools</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#why-abby">
+              <span data-translate="nav.whyAbby">Why Abby</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#testimonials">
+              <span data-translate="nav.testimonials">Testimonials</span>
             </a>
           </li>
         </ul>
@@ -453,6 +532,168 @@
       </div>
     </div>
 
+    <div class="py-vh-5 bg-gray-100 w-100 overflow-hidden" id="admin-tools">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-9" data-aos="fade-down">
+            <p class="text-uppercase text-secondary fw-bold section-label mb-2">Admin AI Tools</p>
+            <h2 class="display-6 mb-3 admin-heading">Every insight from the Admin Tools playbook</h2>
+            <p class="lead mb-1">Walk through the same dashboards, reports, and automation flows outlined in the Admin Tools document.</p>
+            <p class="text-muted">Built with our new Advensus and Thomas partnership so operations, sales, and leadership stay in lockstep.</p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-12" data-aos="fade-up">
+            <div class="admin-slider" data-admin-slider data-images='["img/admin-tools/image1.jpeg","img/admin-tools/image2.jpeg","img/admin-tools/image3.jpeg","img/admin-tools/image4.jpeg","img/admin-tools/image5.jpeg","img/admin-tools/image6.jpeg","img/admin-tools/image7.jpeg","img/admin-tools/image8.jpeg","img/admin-tools/image9.jpeg"]'>
+              <button class="admin-slider-btn admin-slider-btn-prev" type="button" data-prev aria-label="Previous screenshot">&#8592;</button>
+              <img src="img/admin-tools/image1.jpeg" alt="Admin AI Tools screen" loading="lazy">
+              <button class="admin-slider-btn admin-slider-btn-next" type="button" data-next aria-label="Next screenshot">&#8594;</button>
+            </div>
+            <div class="admin-slider-indicator" data-slider-indicator>1 / 9</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-vh-5 w-100 overflow-hidden" id="why-abby">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-xl-8" data-aos="fade-up">
+            <p class="text-uppercase text-secondary fw-bold section-label mb-2">What Microsoft Copilot is saying about Abby</p>
+            <h2 class="display-5 mb-3 copilot-heading">🧠 QaLab.ai can be a game-changer for your homepage</h2>
+            <p class="lead">QaLab.ai supercharges lead generation and customer engagement by combining natural, conversational AI with deep context. Here is exactly how Copilot summarized the advantages.</p>
+            <p class="fw-semibold mt-4 mb-3">🚀 Key Advantages of QaLab.ai for Your Homepage</p>
+            <div class="mb-4">
+              <h3 class="h5 fw-bold">1. 24/7 AI-Powered Engagement</h3>
+              <ul class="ps-3">
+                <li>The platform uses conversational AI to interact with visitors around the clock.</li>
+                <li>Even when your team is offline, it captures contact info and qualifies leads automatically.</li>
+              </ul>
+            </div>
+            <div class="mb-4">
+              <h3 class="h5 fw-bold">2. Smarter Lead Qualification</h3>
+              <ul class="ps-3">
+                <li>QaLab’s AI understands visitor intent and gathers key data.</li>
+                <li>Your sales team can focus on high-potential leads instead of chasing cold ones.</li>
+              </ul>
+            </div>
+            <div class="mb-4">
+              <h3 class="h5 fw-bold">3. Seamless Integration</h3>
+              <ul class="ps-3">
+                <li>Easily connects to your CRM and marketing tools via documented iFrame links.</li>
+                <li>Syncs leads, tracks conversations, and measures ROI through a built-in analytics dashboard.</li>
+              </ul>
+            </div>
+            <div class="mb-4">
+              <h3 class="h5 fw-bold">4. Reduces Bounce Rates</h3>
+              <ul class="ps-3">
+                <li>Engages visitors instantly, preventing them from leaving without interacting.</li>
+                <li>Replaces clunky forms with dynamic conversations that feel natural and frictionless.</li>
+              </ul>
+            </div>
+            <div class="mb-4">
+              <h3 class="h5 fw-bold">5. Mobile-Friendly and Trust-Building</h3>
+              <ul class="ps-3">
+                <li>Avoids long forms that frustrate mobile users.</li>
+                <li>Builds trust through conversational flow before asking for personal info.</li>
+              </ul>
+            </div>
+            <div class="mb-4">
+              <h3 class="h5 fw-bold">6. Fast Response = More Sales</h3>
+              <ul class="ps-3">
+                <li>Eliminates delays in follow-up—visitors get answers instantly.</li>
+                <li>The now factor is crucial in today’s fast-paced digital landscape.</li>
+              </ul>
+            </div>
+            <div class="mb-5">
+              <h3 class="h5 fw-bold">7. Flexible Pricing</h3>
+              <ul class="ps-3">
+                <li>No setup fees, no contracts.</li>
+                <li>Only pay for qualified engagement, with cost-per-click ranging from $2 to $4.</li>
+              </ul>
+            </div>
+            <p class="fw-semibold">💡 Bottom Line</p>
+            <p>QaLab.ai transforms your homepage from a static billboard into a dynamic sales assistant. It’s like hiring a tireless, ultra-smart rep who never sleeps and always knows what to say. Need help integrating it into your site or optimizing your homepage to make the most of it?</p>
+            <div class="border rounded-3 p-4 bg-light mt-4">
+              <p class="mb-3">Based on what wwwqalab.ai offers, it’s not just hype—it genuinely seems built to tackle bounce rates and boost lead conversion.</p>
+              <p class="fw-semibold mb-2">🔍 What wwwqalab.ai Does Well</p>
+              <ul class="ps-3">
+                <li><strong>24/7 AI Engagement:</strong> Intelligent conversations engage visitors instantly, even when your team is offline.</li>
+                <li><strong>Lead Qualification on Autopilot:</strong> Understands intent, gathers key data, and hands sales warm leads.</li>
+                <li><strong>CRM Integration and Analytics:</strong> API and iFrame support keep your existing stack in sync.</li>
+                <li><strong>Mobile-Friendly and Frictionless:</strong> Avoids long forms and keeps prospects moving.</li>
+              </ul>
+              <p class="fw-semibold mb-2">📉 Bounce Rate Reduction Potential</p>
+              <ul class="ps-3">
+                <li>Guides visitors, simplifies choices, and responds instantly so they stick around.</li>
+                <li>AI personalization and predictive timing show offers when users are most receptive.</li>
+              </ul>
+              <p class="fw-semibold mb-2">💡 Conversion Boosting Features</p>
+              <ul class="ps-3">
+                <li>AI-powered CRO with behavioral analytics, automated A/B testing, and real-time personalization increases conversions by up to 20% on average.</li>
+              </ul>
+              <p class="mb-0">If implemented thoughtfully, QaLab.ai helps turn passive visitors into qualified leads fast. Ready to explore how it can fit into your own strategy?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-vh-5 bg-gray-100 w-100 overflow-hidden" id="testimonials">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8" data-aos="fade-down">
+            <p class="text-uppercase text-secondary fw-bold section-label mb-2">Testimonials</p>
+            <h2 class="display-6 testimonials-heading">What companies are saying about Abby — the AI voice concierge</h2>
+          </div>
+        </div>
+        <div class="row g-4 mt-3">
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="p-4 bg-white h-100 rounded-3 shadow-sm">
+              <p class="fw-bold">“Our website conversions increased immediately.”</p>
+              <p class="fst-italic">“Before Abby, visitors were bouncing without engaging. Now Abby greets them instantly, answers questions, and captures real leads. We saw a measurable lift in conversions within the first week.”</p>
+              <p class="fw-semibold mb-0">— VP of Marketing, SbhelGroup</p>
+            </div>
+          </div>
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="p-4 bg-white h-100 rounded-3 shadow-sm">
+              <p class="fw-bold">“Abby captures leads we were losing every day.”</p>
+              <p class="fst-italic">“We had chatbots, but nobody used them. Abby actually talks to visitors, qualifies them, and sends us warm leads automatically. She’s now part of our sales team.”</p>
+              <p class="fw-semibold mb-0">— CEO, Home Services Energy</p>
+            </div>
+          </div>
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="p-4 bg-white h-100 rounded-3 shadow-sm">
+              <p class="fw-bold">“The AI conversations feel natural — customers prefer talking to Abby.”</p>
+              <p class="fst-italic">“Most customers don’t want to fill out forms. Abby speaks to them like a real agent and hands warm leads directly to our reps. It’s a game-changer.”</p>
+              <p class="fw-semibold mb-0">— Director of Sales, BPO Advensus Call Centers</p>
+            </div>
+          </div>
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="p-4 bg-white h-100 rounded-3 shadow-sm">
+              <p class="fw-bold">“Our contact rate increased dramatically.”</p>
+              <p class="fst-italic">“Abby engages visitors instantly, in English or Spanish. Even outside business hours, she answers questions, schedules appointments, and sends every conversation to our CRM.”</p>
+              <p class="fw-semibold mb-0">— Operations Manager, Financial Services</p>
+            </div>
+          </div>
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="p-4 bg-white h-100 rounded-3 shadow-sm">
+              <p class="fw-bold">“No training, no scripting — Abby just works.”</p>
+              <p class="fst-italic">“We’re shocked at how easy this was to deploy. Abby learned our business in minutes. This would normally take weeks of development.”</p>
+              <p class="fw-semibold mb-0">— IT Integrations Manager, Gcom Worldwide</p>
+            </div>
+          </div>
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="p-4 bg-white h-100 rounded-3 shadow-sm">
+              <p class="fw-bold">“The ROI is instant.”</p>
+              <p class="fst-italic">“We closed two deals the first week using leads Abby captured. We’re now rolling this out across all our division websites.”</p>
+              <p class="fw-semibold mb-0">— CMO, Retail &amp; eCommerce ApexWebSolutions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="py-vh-6 bg-gray-900 text-light w-100 overflow-hidden" id="workwithus">
       <div class="container">
         <div class="row d-flex justify-content-center">
@@ -566,6 +807,46 @@
     }
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const slider = document.querySelector('[data-admin-slider]');
+      if (!slider) {
+        return;
+      }
+
+      const imageElement = slider.querySelector('img');
+      const prevBtn = slider.querySelector('[data-prev]');
+      const nextBtn = slider.querySelector('[data-next]');
+      const indicator = slider.parentElement.querySelector('[data-slider-indicator]');
+      const images = JSON.parse(slider.getAttribute('data-images') || '[]');
+
+      if (!imageElement || !prevBtn || !nextBtn || images.length === 0) {
+        return;
+      }
+
+      let currentIndex = 0;
+
+      function showImage(index) {
+        currentIndex = (index + images.length) % images.length;
+        imageElement.src = images[currentIndex];
+        imageElement.alt = `Admin AI Tools screen ${currentIndex + 1}`;
+        if (indicator) {
+          indicator.textContent = `${currentIndex + 1} / ${images.length}`;
+        }
+      }
+
+      prevBtn.addEventListener('click', function () {
+        showImage(currentIndex - 1);
+      });
+
+      nextBtn.addEventListener('click', function () {
+        showImage(currentIndex + 1);
+      });
+
+      showImage(0);
+    });
+  </script>
+
   <!-- Language Toggle Script -->
   <script>
     // Define translations object
@@ -574,9 +855,12 @@
         // Navigation
         'nav.services': 'Services',
         'nav.aboutus': 'About us',
-        'nav.numbers': 'Numbers',
+        'nav.numbers': 'Stats',
         'nav.pricing': 'Pricing',
         'nav.contactUs': 'Contact Us',
+        'nav.adminTools': 'Admin Tools',
+        'nav.whyAbby': 'Why Abby',
+        'nav.testimonials': 'Testimonials',
 
         // Hero Section
         'hero.title': 'Turn Your Website Into a Lead-Generation Engine with Abby, Your AI Concierge',
@@ -640,9 +924,12 @@
         // Navigation
         'nav.services': 'Servicios',
         'nav.aboutus': 'Sobre Nosotros',
-        'nav.numbers': 'Números',
+        'nav.numbers': 'Estadísticas',
         'nav.pricing': 'Precios',
         'nav.contactUs': 'Contáctanos',
+        'nav.adminTools': 'Herramientas Admin',
+        'nav.whyAbby': 'Por qué Abby',
+        'nav.testimonials': 'Testimonios',
 
         // Hero Section
         'hero.title': 'Convierte tu Sitio Web en un Motor de Generación de Leads con Abby, tu Conserje de IA',
