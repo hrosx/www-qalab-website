@@ -228,13 +228,19 @@
       position: relative;
       max-width: 960px;
       margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      background: #f8f9fa;
+      border-radius: 1rem;
+      overflow: hidden;
     }
 
     .admin-slider img {
       width: 100%;
+      height: 100%;
       border-radius: 1rem;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
-      object-fit: cover;
+      object-fit: contain;
+      background: #f8f9fa;
     }
 
     .admin-slider-btn {
@@ -543,9 +549,9 @@
         </div>
         <div class="row mt-4">
           <div class="col-12" data-aos="fade-up">
-            <div class="admin-slider" data-admin-slider data-images='["img/admin-tools/image1.jpeg","img/admin-tools/image2.jpeg","img/admin-tools/image3.jpeg","img/admin-tools/image4.jpeg","img/admin-tools/image5.jpeg","img/admin-tools/image6.jpeg","img/admin-tools/image7.jpeg","img/admin-tools/image8.jpeg","img/admin-tools/image9.jpeg"]'>
+            <div class="admin-slider" data-admin-slider data-images='["img/admin-tools/01_Main.jpg","img/admin-tools/02_DataEntry.jpg","img/admin-tools/03_Instructions.jpg","img/admin-tools/04_InstructionsExpanded.jpg","img/admin-tools/05_WidgetLink.jpg","img/admin-tools/06_UserDashboard.jpg","img/admin-tools/07_Transcripts.jpg","img/admin-tools/08_Recordings.jpg","img/admin-tools/09_AbbySandBox.jpg"]'>
               <button class="admin-slider-btn admin-slider-btn-prev" type="button" data-prev aria-label="Previous screenshot">&#8592;</button>
-              <img src="img/admin-tools/image1.jpeg" alt="Admin AI Tools screen" loading="lazy">
+              <img src="img/admin-tools/01_Main.jpg" alt="Admin AI Tools screen" loading="lazy">
               <button class="admin-slider-btn admin-slider-btn-next" type="button" data-next aria-label="Next screenshot">&#8594;</button>
             </div>
             <div class="admin-slider-indicator" data-slider-indicator>1 / 9</div>
