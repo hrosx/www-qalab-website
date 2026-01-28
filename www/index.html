@@ -188,22 +188,92 @@
       color: white;
     }
 
+    /* Responsive language toggle */
+    @media (max-width: 991.98px) {
+      .language-toggle {
+        padding: 4px 10px;
+        font-size: 12px;
+        margin-left: 0;
+        margin-top: 15px;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .language-toggle {
+        padding: 3px 8px;
+        font-size: 11px;
+      }
+    }
+
     .nav-signup-link {
       display: inline-block;
-      padding: 6px 16px;
-      margin-right: 15px;
+      padding: 8px 16px;
+      margin-right: 10px;
       background: #ffc107;
       color: #212529;
       font-size: 14px;
       font-weight: 600;
       text-decoration: none;
       border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.3s ease;
     }
 
     .nav-signup-link:hover,
     .nav-signup-link:focus {
       background: #e0a800;
       color: #212529;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+    }
+
+    /* Responsive styles for nav-signup-link */
+    @media (max-width: 991.98px) {
+      .nav-signup-link {
+        padding: 10px 14px;
+        font-size: 13px;
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .nav-signup-link {
+        padding: 8px 12px;
+        font-size: 12px;
+        margin-right: 5px;
+      }
+    }
+
+    /* Navbar right section for always-visible signup */
+    /* Mobile/Tablet: show wrapper, hide desktop button */
+    /* Desktop: hide wrapper, show desktop button */
+    .navbar-cta-wrapper {
+      display: none;
+      align-items: center;
+    }
+
+    .nav-signup-desktop {
+      display: none;
+    }
+
+    @media (max-width: 991.98px) {
+      .navbar-cta-wrapper {
+        display: flex;
+        margin-left: 0;
+        margin-right: 10px;
+      }
+      .nav-signup-desktop {
+        display: none !important;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .navbar-cta-wrapper {
+        display: none !important;
+      }
+      .nav-signup-desktop {
+        display: inline-block !important;
+      }
     }
 
     /* Adjust hero background image on mobile for better text readability */
@@ -216,7 +286,7 @@
         top: auto !important;
         bottom: 0 !important;
       }
-      
+
       /* Ensure text has better contrast on mobile */
       .hero-text-mobile {
         position: relative;
@@ -225,6 +295,99 @@
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 20px;
+      }
+
+      /* Responsive button sizing for tablets */
+      .btn-xl {
+        padding: 12px 24px !important;
+        font-size: 1rem !important;
+      }
+
+      /* Adjust display headings */
+      .display-4 {
+        font-size: 2rem !important;
+      }
+
+      .display-6 {
+        font-size: 1.5rem !important;
+      }
+
+      /* Improve lead text readability */
+      .lead {
+        font-size: 1.1rem !important;
+        line-height: 1.6 !important;
+      }
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 575.98px) {
+      /* Smaller button on mobile */
+      .btn-xl {
+        padding: 10px 20px !important;
+        font-size: 0.9rem !important;
+        width: 100%;
+        text-align: center;
+      }
+
+      /* Smaller headings on mobile */
+      .display-4 {
+        font-size: 1.75rem !important;
+      }
+
+      .display-6 {
+        font-size: 1.25rem !important;
+      }
+
+      /* Adjust lead text */
+      .lead {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+      }
+
+      /* Navbar brand adjustment */
+      .navbar-brand {
+        font-size: 1rem !important;
+      }
+
+      .navbar-brand svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Better spacing for mobile hero */
+      .py-vh-6 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+      }
+
+      /* Scroll indicator positioning for mobile */
+      .scroll-indicator {
+        left: 15px;
+        bottom: 90px;
+        width: 55px;
+        height: 55px;
+      }
+
+      .scroll-indicator svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .scroll-indicator-text {
+        font-size: 9px;
+      }
+    }
+
+    /* Tablet landscape and small desktop */
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .btn-xl {
+        padding: 14px 28px !important;
+        font-size: 1.05rem !important;
+      }
+
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
       }
     }
 
@@ -318,6 +481,11 @@
         <span class="ms-1 fw-bolder">QALAB</span>
       </a>
 
+      <!-- Always visible CTA wrapper (outside collapse) -->
+      <div class="navbar-cta-wrapper">
+        <a class="nav-signup-link" href="https://assistant.qalab.ai/signup" data-translate="hero.signup">Sign-up free trial</a>
+      </div>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -365,7 +533,8 @@
             </a>
           </li>
         </ul>
-        <a class="nav-signup-link" href="https://assistant.qalab.ai/signup" data-translate="hero.signup">Sign-up free trial</a>
+        <!-- Desktop signup and language toggle -->
+        <a class="nav-signup-link nav-signup-desktop" href="https://assistant.qalab.ai/signup" data-translate="hero.signup">Sign-up free trial</a>
         <button class="language-toggle" id="languageToggle">EN</button>
       </div>
     </div>
