@@ -206,6 +206,48 @@
       color: #212529;
     }
 
+    .hero-video-overlay {
+      position: absolute;
+      top: 110px;
+      right: 4%;
+      width: min(440px, 33%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-video-label {
+      margin-bottom: 10px;
+      padding: 6px 14px;
+      color: #334155;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(51, 65, 85, 0.2);
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+      font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-align: center;
+    }
+
+    .hero-video-shell {
+      width: min(440px, 100%);
+      aspect-ratio: 960 / 998;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #0f172a;
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.22);
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
     /* Adjust hero background image on mobile for better text readability */
     @media (max-width: 991.98px) {
       .hero-bg-mobile {
@@ -216,7 +258,20 @@
         top: auto !important;
         bottom: 0 !important;
       }
-      
+
+      .hero-video-overlay {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 100%;
+        max-width: 360px;
+        margin: 8px auto 28px;
+      }
+
+      .hero-video-shell {
+        width: 100%;
+      }
+
       /* Ensure text has better contrast on mobile */
       .hero-text-mobile {
         position: relative;
@@ -411,6 +466,15 @@
             </div>
             
             <a href="#numbers" class="btn btn-dark btn-xl shadow me-3 rounded-0 my-5" data-translate="hero.cta">Start Generating Leads</a>
+          </div>
+        </div>
+        <div class="hero-video-overlay" data-aos="fade-left">
+          <p class="hero-video-label" data-translate="hero.videoLabel">Set up Abby in less than 15 minutes</p>
+          <div class="hero-video-shell">
+            <video class="hero-video" controls playsinline preload="metadata">
+              <source src="video/AbbyHomePageFullRun.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>
@@ -819,6 +883,56 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const heroVideo = document.querySelector('.hero-video');
+      if (!heroVideo) {
+        return;
+      }
+
+      const defaultRate = 1.5;
+      let userChangedRate = false;
+      let settingDefaultRate = false;
+      let hasStartedPlayback = false;
+
+      const setInitialPlaybackRate = function () {
+        if (userChangedRate) {
+          return;
+        }
+
+        if (Math.abs(heroVideo.playbackRate - defaultRate) < 0.01) {
+          return;
+        }
+
+        settingDefaultRate = true;
+        heroVideo.defaultPlaybackRate = defaultRate;
+        heroVideo.playbackRate = defaultRate;
+        setTimeout(function () {
+          settingDefaultRate = false;
+        }, 0);
+      };
+
+      if (heroVideo.readyState >= 1) {
+        setInitialPlaybackRate();
+      } else {
+        heroVideo.addEventListener('loadedmetadata', setInitialPlaybackRate, { once: true });
+      }
+
+      heroVideo.addEventListener('canplay', setInitialPlaybackRate);
+      heroVideo.addEventListener('play', function () {
+        hasStartedPlayback = true;
+        setInitialPlaybackRate();
+      });
+
+      heroVideo.addEventListener('ratechange', function () {
+        if (settingDefaultRate || !hasStartedPlayback) {
+          return;
+        }
+        userChangedRate = true;
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
       const slider = document.querySelector('[data-admin-slider]');
       if (!slider) {
         return;
@@ -876,6 +990,7 @@
         'hero.title': 'Turn Your Website Into a Lead-Generation Engine with Abby, Your AI Concierge',
         'hero.subtitle': 'Abby isn\'t just another chatbot—she\'s an AI-powered voice concierge that captures, qualifies, and converts your website visitors into real leads through intelligent, Deep knowledge natural conversations. Available 24/7, Abby ensures you never miss an opportunity to connect with a potential customer. Signup for your free trial now.',
         'hero.signup': 'Sign-up free trial',
+        'hero.videoLabel': 'Set up Abby in less than 15 minutes',
         'hero.cta': 'Start Generating Leads',
         'hero.feature1': 'Capture more qualified leads',
         'hero.feature2': 'Deliver instant, frictionless support',
@@ -945,6 +1060,7 @@
         'hero.title': 'Convierte tu Sitio Web en un Motor de Generación de Leads con Abby, tu Conserje de IA',
         'hero.subtitle': 'Abby no es solo otro chatbot—es un conserje de voz impulsado por IA que captura, califica y convierte a los visitantes de tu sitio web en leads reales a través de conversaciones inteligentes y naturales con conocimiento profundo. Disponible 24/7, Abby asegura que nunca pierdas una oportunidad de conectar con un cliente potencial. Regístrate para tu prueba gratuita ahora.',
         'hero.signup': 'Prueba gratis',
+        'hero.videoLabel': 'Configura Abby en menos de 15 minutos',
         'hero.cta': 'Empieza a Generar Leads',
         'hero.feature1': 'Captura más leads calificados',
         'hero.feature2': 'Ofrece soporte instantáneo y sin fricciones',
